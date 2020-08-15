@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>게시판 리스트</title>
+
+<style>
+
+table.test1 {
+    border-collapse: collapse;
+    text-align: left;
+    line-height: 1.5;
+    border: 1px solid #ccc;
+    margin: 20px 10px;
+}
+table.test1 thead {
+    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    background: #E082F1;
+}
+table.test1 thead th {
+    padding: 10px;
+    font-weight: bold;
+    vertical-align: top;
+    color: #fff;
+}
+table.test1 tbody th {
+    width: 150px;
+    padding: 10px;
+    font-weight: bold;
+    vertical-align: top;
+    border-bottom: 1px solid #ccc;
+    background: #F1CFF7;
+}
+table.test1 td {
+    width: 350px;
+    padding: 10px;
+    vertical-align: top;
+    border-bottom: 1px solid #ccc;
+}
+
+</style>
+
+
+</head>
+<body>
+
+<div align="center">
+	<h1>공 지 사 항</h1>
+	<table border="0" width="800">
+		<tr bgcolor="#F1CFF7">
+		<td align="center">
+		<span>
+		<input type="text" placeholder="검색어 입력">
+		<button>검색</button>
+		</span>
+		</td>
+			<td align="right"><a href="board_write.do"><strong>글쓰기</strong></a></td>
+		</tr>
+	</table>
+	
+	<table class="test1" border="1" width="800">
+		<thead>
+			<tr>
+				<th scope="col">번호</th>
+				<th scope="col" width="40%">제목</th>
+				<th scope="col">작성자</th>
+				<th scope="col">작성일</th>
+				<th scope="col">조회</th>
+				<th scope="col">IP</th>
+			</tr> 
+		</thead>
+		
+		<tbody>
+		<tr>
+			<th scope="row">1</th>
+			<td>안녕하세요</td>
+			<td>양진석</td>
+			<td>2020-08-15</td>
+			<td>10</td>
+			<td>000.000.000</td>
+		</tr>
+		
+		<tr>
+			<th scope="row">2</th>
+			<td>좋은 주말되세요</td>
+			<td>박기태</td>
+			<td>2020-08-15</td>
+			<td>10</td>
+			<td>000.000.000</td>
+		</tr>
+		
+		<tr>
+			<th scope="row">3</th>
+			<td>이젠 매칭해~</td>
+			<td>방민혁</td>
+			<td>2020-08-15</td>
+			<td>10</td>
+			<td>000.000.000</td>
+		</tr>
+		
+		<tr>
+			<th scope="row">4</th>
+			<td>공지사항이에요</td>
+			<td>윤상현</td>
+			<td>2020-08-15</td>
+			<td>10</td>
+			<td>000.000.000</td>
+		</tr>
+		
+		<tr>
+			<th scope="row">5</th>
+			<td>굳굳굳</td>
+			<td>이재욱</td>
+			<td>2020-08-15</td>
+			<td>10</td>
+			<td>000.000.000</td>
+		</tr>
+		
+		<tr>
+			<th scope="row">6</th>
+			<td>중요공지!!</td>
+			<td>정석주</td>
+			<td>2020-08-15</td>
+			<td>10</td>
+			<td>000.000.000</td>
+		</tr>
+		
+		<tr>
+			<th scope="row">7</th>
+			<td>그렇게 하면 됩니다</td>
+			<td>한승원</td>
+			<td>2020-08-15</td>
+			<td>10</td>
+			<td>000.000.000</td>
+		</tr>
+		</tbody>
+		
+		</table>
+		
+		<span><a href="#">이전</a> </span>
+		<span><a href="#">1</a> </span>
+		<span><a href="#">2</a> </span>
+		<span><a href="#">3</a></span>
+		<span><a href="#">4</a></span>
+		<span><a href="#">5</a></span>
+		<span><a href="#">다음</a></span>
+			
+</div>
+
+</body>
+</html>
