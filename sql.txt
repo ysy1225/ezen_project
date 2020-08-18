@@ -1,3 +1,16 @@
+create table notice(
+num number primary key,
+writer varchar2(30),
+subject varchar2(500),
+notice_date varchar2(10),
+readcount number default 0,
+content varchar2(4000));
+
+create sequence notice_num;
+-->공지사항
+
+
+
 create table tutor(
 tutorNum number primary key,
 tutorEmail varchar2(50),
