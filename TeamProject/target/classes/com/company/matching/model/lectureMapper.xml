@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.matching.model">
+       
+    <!-- 강의등록 -->
+	<insert id="lectureInput" parameterType="LectureDTO">
+ 		INSERT INTO lecture VALUES(lecture_num.nextval,#{userNum},#{name},#{email},#{mainCate},#{subCate},#{subject},#{location1},#{location2},#{location3},#{date1},#{time1_1},#{time1_2}, 
+		<if test="date2 == null">
+ 		null, 
+ 		</if>
+		<if test="date2 != null">
+ 		#{date2}, 
+ 		</if>
+ 		#{time2_1},#{time2_2}, 
+		<if test="date3 == null">
+ 		null, 
+ 		</if>
+		<if test="date3 != null">
+ 		#{date3}, 
+ 		</if>
+ 		#{time3_1},#{time3_2},#{price},#{tutors},#{content},#{filename},#{filesize},sysdate,0) 
+	</insert>
+	
+    <!-- 내 강의목록 -->
+	<select id="lectureList" resultType="LectureDTO">
+		<include refid="pagingHeader"></include>
+		SELECT * FROM lecture
+		<include refid="lectureSearch"></include>
+		ORDER BY lecDate desc
+		<include refid="pagingFooter"></include>
+	</select>
+	
+	<!-- 내 강의목록 카운트 -->
+	<select id="countLecture" parameterType="LectureDTO" resultType="int">
+		SELECT COUNT(*) FROM lecture
+		<!-- WHERE절을 include 태그로 삽입 -->
+		<include refid="lectureSearch"></include>
+	</select>
+	
+	<!-- 강의 보기(날짜1,날짜2,날짜3,시간 형식에 맞게 출력) -->
+	<select id="lectureInfo" parameterType="int" resultType="LectureDTO">
+		SELECT * FROM lecture WHERE lectureNum=#{lectureNum}
+	</select>	
+	<select id="date1Form" resultType="String">
+		SELECT to_char(date1,'MM/DD(dy)') FROM lecture WHERE lectureNum=#{lectureNum}
+	</select>
+	<select id="date2Form" resultType="String">
+		SELECT to_char(date2,'MM/DD(dy)') FROM lecture WHERE lectureNum=#{lectureNum}
+	</select>
+	<select id="date3Form" resultType="String">
+		SELECT to_char(date3,'MM/DD(dy)') FROM lecture WHERE lectureNum=#{lectureNum}
+	</select>
+	<select id="hourMinus" parameterType="LectureDTO" resultType="int">
+		SELECT round((to_date(#{time1_2},'hh24:mi')-to_date(#{time1_1},'hh24:mi'))*24) FROM lecture WHERE lectureNum=#{lectureNum}
+	</select>
+	
+	<!-- 분야별 강의목록 리스트 -->
+	<select id="lectureAllList" parameterType="java.util.Map" resultType="lectutrev">
+ 		select lec.*,tut.filename_face,tut.tutorNickname,(select avg(star) from review rev where lec.lecturenum=rev.lecturenum) as avg,(select count(*) from review rev where lec.lecturenum=rev.lecturenum) as count from lecture lec,tutor tut where maincate like #{mainCate} and leclevel = 0
+ 		<if test="loc1 != ''">
+		and location1 like '%'||#{loc1}||'%'
+  		<if test="loc2 != ''">
+		and location2 like '%'||#{loc2}||'%' 
+ 		</if>
+ 		</if>
+		and tutorLevel=1 and tut.usernum=lec.usernum order by lecDate desc
+ 	</select>
+ 	
+ 	<!-- 분야별 강의목록 수 카운트 -->
+ 	<select id="lectureAllCount" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(*) FROM lecture WHERE mainCate=#{mainCate} and leclevel = 0
+		<if test="loc1 != ''">
+ 		and location1 like '%'||#{loc1}||'%'
+ 		<if test="loc2 != ''">
+ 		and location2 like '%'||#{loc2}||'%' 
+ 		</if>
+ 		</if>
+	</select>
+	
+	<!-- 분야별 강의목록 검색 -->
+	<select id="lectureFind" parameterType="java.util.Map" resultType="LectureDTO">
+		SELECT * FROM lecture WHERE mainCate=#{mainCate}
+		<if test="location1 != ''">
+		AND location1=#{location1}
+		</if>
+	</select>
+	
+	<!-- 분야별 강의목록 검색할 키워드 수 카운트 -->
+	<select id="lectureFindCount" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(*) FROM lecture WHERE mainCate=#{mainCate}
+		<if test="location1 != ''">
+		AND location1=#{location1}
+		</if>
+	</select>
+	
+	<insert id="lecturePay" parameterType="java.util.Map">
+		insert into pay values(pay_num.nextval,#{userNum},#{lectureNum},#{payPrice},${time},sysdate)
+	</insert>
+	
+	<select id="payInfo" parameterType="java.util.Map" resultType="PayDTO">
+		select * from pay where userNum=#{userNum} and lectureNum=#{lectureNum} and payNum=(select max(payNum) from pay)
+	</select>
+	
+	<select id="dateCount" parameterType="LectureDTO" resultType="int">
+		select sum(count(date1)+count(date2)+count(date3)) from lecture where lectureNum=#{lectureNum} group by lectureNum
+	</select>
+	
+	<!-- main page -->
+	<!-- <select id="New" resultType="LectureDTO">
+		select * from (select ROWNUM rn,A.*from(select * from lecture order by lectureNum desc)A) where rn between 1 and 6
+	</select> -->
+	<select id="best" resultType="best">
+		<!-- select * from (
+        select ROWNUM rn,A.*from(
+        select lectureNum as rlec,(
+        select subject from lecture lec where lec.lectureNum=review.lectureNum) as lec,(
+        select filename from lecture lec where lec.lectureNum=review.lectureNum) as filename, 
+        avg(star) avg, count(revnum) co from review group by lectureNum order by avg desc)A) where rn between 1 and 6 -->
+        
+        <!-- select * from (
+        select ROWNUM rn,A.*from(
+        select lectureNum as rlec,(
+        select subject from lecture lec where lec.lectureNum=review.lectureNum) as lec,(
+        select name from lecture lec where lec.lectureNum=review.lectureNum)as name,(
+        select filename from lecture lec where lec.lectureNum=review.lectureNum) as filename, 
+        avg(star) avg, count(revnum) co from review group by lectureNum order by avg desc)A) where rn between 1 and 6 -->
+        
+        select * from (
+        select rownum rn, A.*from (
+        select lec.*, tut.filename_face, tut.tutorNickname, (
+        select avg(star) from review rev where lec.lecturenum=rev.lecturenum) as avg, (
+        select count(*) from review rev where lec.lecturenum=rev.lecturenum) as count from lecture lec, tutor tut where tutorLevel=1 and tut.usernum=lec.usernum order by avg desc)A) where rn between 1 and 6
+	</select>
+	<!-- <select id="live" resultType="live">
+		select (select filename from lecture lec where lec.lectureNum=rev.lectureNum) as filename,(select name from lecture lec where lec.lectureNum=rev.lectureNum) as name,(select subject from lecture lec where lec.lectureNum=rev.lectureNum) as subject,rev.* from review rev order by revDate desc
+	</select> -->
+	<select id="rowPrice" resultType="lectutrev">
+		select * from (
+        select rownum rn, A.*from (
+        select lec.*, tut.filename_face, tut.tutorNickname, (
+        select avg(star) from review rev where lec.lecturenum=rev.lecturenum) as avg, (
+        select count(*) from review rev where lec.lecturenum=rev.lecturenum) as count 
+        from lecture lec, tutor tut where 10000>=price and tut.usernum=lec.usernum order by price desc)A) where rn between 1 and 6
+	</select>
+	<select id="lectutrev" resultType="lectutrev">
+		<!-- select * from (
+        select ROWNUM rn,A.*from(
+        select lectureNum as rlec,(
+        select subject from lecture lec where lec.lectureNum=review.lectureNum) as lec,(
+        select name from lecture lec where lec.lectureNum=review.lectureNum)as name,(
+        select filename from lecture lec where lec.lectureNum=review.lectureNum) as filename, 
+        avg(star) avg, count(revnum) co from review group by lectureNum order by lectureNum desc)A) where rn between 1 and 6 -->
+        
+        select * from (
+        select rownum rn, A.*from (
+        select lec.*, tut.filename_face, tut.tutorNickname, (
+        select avg(star) from review rev where lec.lecturenum=rev.lecturenum) as avg, (
+        select count(*) from review rev where lec.lecturenum=rev.lecturenum) as count from lecture lec, tutor tut where tutorLevel=1 and tut.usernum=lec.usernum order by lecDate desc)A) where rn between 1 and 6
+	</select>
+	<!-- -->
+	
+	<!-- 찜 목록 추가 -->
+	<insert id="cartInput" parameterType="CartDTO">
+		INSERT INTO cart VALUES(cart_num.nextval,#{userNum},#{lectureNum},sysdate)
+	</insert>
+	
+	<!-- 찜 중복방지 -->
+	<select id="cartOverlap" parameterType="CartDTO" resultType="int">
+		SELECT COUNT(*) FROM cart WHERE userNum=#{userNum} AND lectureNum=#{lectureNum}
+	</select>
+	
+	<!-- 찜 목록 -->
+	<select id="myPageCart" parameterType="int" resultType="CartLectureDTO">
+		SELECT lecture.name, lecture.filename, lecture.subject, lecture.mainCate, lecture.subCate, cart.*
+		FROM lecture left outer join cart 
+		ON lecture.lectureNum = cart.lectureNum
+		WHERE cart.userNum = #{userNum}
+		ORDER BY cartNum desc
+	</select>
+	
+	<!-- 리뷰 데이터 가져오기 -->
+	<select id="getRev" parameterType="Integer" resultType="reviewDTO"> 
+		SELECT * FROM review WHERE revNum=#{revNum} 
+	</select>
+	
+	<!-- 리뷰 수정 -->
+	<update id="updateRev" parameterType="reviewDTO"> 
+		UPDATE review SET star=#{star},revContent=#{revContent},revDate=sysdate WHERE revNum=#{revNum} 
+	</update>
+	
+	<!-- 리뷰 삭제 -->
+	<delete id="deleteRev" parameterType="reviewDTO"> 
+		DELETE FROM review WHERE revNum=#{revNum} 
+	</delete>
+	
+	<!-- 강의 수정 (삭제 후 재등록)-->
+	<delete parameterType="int" id="lectureDelete"> 
+		DELETE FROM lecture WHERE lectureNum=#{lectureNum} 
+	</delete>
+	<insert parameterType="LectureDTO" id="lectureUpdate"><!-- 수정, 강의열기 -->
+ 		INSERT INTO lecture VALUES(#{lectureNum},#{userNum},#{name},#{email},#{mainCate},#{subCate},#{subject},#{location1},#{location2}, #{location3},#{date1},#{time1_1},#{time1_2}, 
+		<if test="date2 == null"> 
+		null, 
+		</if>
+		<if test="date2 != null"> 
+		#{date2}, 
+		</if>
+ 		#{time2_1},#{time2_2}, 
+		<if test="date3 == null"> 
+		null, 
+		</if>
+		<if test="date3 != null"> 
+		#{date3}, 
+		</if>
+ 		#{time3_1},#{time3_2},#{price},#{tutors},#{content},#{filename},#{filesize},sysdate,0) 
+	</insert>
+	
+	
+	<!-- 종료 전 시간 체크 -->
+	<select id="lectureTimeCheck" parameterType="java.util.Map" resultType="int">
+	select count(*) from lecture where to_char(sysdate,'yyyymmdd') > to_char(#{date},'yyyymmdd') and lectureNum=#{lectureNum}
+	</select>
+	
+	<!-- 수업예정인 날짜가 있으면 수강생 체크 -->
+	<select id="lectureUser3Check" resultType="PayDTO">
+	select * from pay where lectureNum=#{lectureNum} and time=3
+	</select>
+	<select id="lectureUser2Check" resultType="PayDTO">
+	select * from pay where lectureNum=#{lectureNum} and time=2
+	</select>
+	<select id="lectureUser1Check" resultType="PayDTO">
+	select * from pay where lectureNum=#{lectureNum} and time=1
+	</select>
+	
+	<!-- 강의종료 실행 -->
+	<update id="lectureClose" parameterType="int">
+	update lecture set lecLevel = 1 where lectureNum=#{lectureNum}
+	</update>
+	
+	<!-- 회원번호로 강의종료(탈퇴 시 종료 처리) -->
+	<update id="lectureCloseU" parameterType="int">
+	update lecture set lecLevel = 1 where userNum=#{userNum}
+	</update>
+	
+	<!-- 개인 분야별 강의목록 검색 sql -->
+	<sql id="lectureSearch">
+		<choose>
+			<!-- 검색옵션이 전체일 경우 -->
+			<when test="searchOption == 'all'">
+				WHERE email=#{mbId}
+				AND (subject like '%'||#{keyword}||'%')
+			</when>
+			<!-- 전체 검색이 아닐 경우 -->
+			<otherwise>
+				WHERE email=#{mbId}
+				AND ${searchOption} like '%'||#{keyword}||'%'
+			</otherwise>
+		</choose>
+	</sql>
+
+</mapper>

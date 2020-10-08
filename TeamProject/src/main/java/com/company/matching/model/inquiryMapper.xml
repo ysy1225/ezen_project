@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.matching.model">
+
+    <!-- 1:1문의 작성 -->
+	<insert id="inqWrite" parameterType="InquiryDTO">
+		INSERT INTO inquiry VALUES(inq_num.nextval,#{inqName},#{userEmail},#{inqPhone},#{inqSubject},#{inqContent},#{filename},#{filesize},sysdate,0)
+	</insert>
+	
+	<!-- 내 문의내역 리스트 -->
+	<select id="inqList" resultType="InquiryDTO">
+		<include refid="pagingHeader"></include>
+		SELECT * FROM inquiry
+		<include refid="search4"></include>
+		ORDER BY inqDate desc
+		<include refid="pagingFooter"></include>
+	</select>
+	
+	<!-- 내 문의내역 수 카운트 -->
+	<select id="countInquiry" parameterType="InquiryDTO" resultType="int">
+		SELECT COUNT(*) FROM inquiry
+		<!-- WHERE절을 include 태그로 삽입 -->
+		<include refid="search4"></include>
+	</select>
+	
+	<!-- (관리자) 전체 문의 리스트 -->
+	<select id="adminInqList" resultType="InquiryDTO">
+		<include refid="pagingHeader"></include>
+		SELECT * FROM inquiry where
+		<include refid="search5"></include>
+		ORDER BY inqDate desc
+		<include refid="pagingFooter"></include>
+	</select>
+	
+	<!-- (관리자) 전체 문의 수 카운트 -->
+	<select id="adminCountInquiry" parameterType="InquiryDTO" resultType="int">
+		SELECT COUNT(*) FROM inquiry where
+		<!-- WHERE절을 include 태그로 삽입 -->
+		<include refid="search5"></include>
+	</select>
+	
+	<!-- 문의한 데이터 값 가져오기 -->
+	<select id="getInq" resultType="InquiryDTO">
+		SELECT * FROM inquiry WHERE inqNum=#{inqNum}
+	</select>
+	
+	<!-- 회원 정보 가져오기 -->
+	<select id="userInq" resultType="UsersDTO">
+		SELECT * FROM users WHERE userEmail=(SELECT DISTINCT userEmail FROM inquiry WHERE inqNum=#{inqNum})
+	</select>
+	
+	<!-- 답변 완료시 inqOk 데이터 값 1올려주기 -->
+	<update id="upInqOk" parameterType="InquiryDTO">
+		UPDATE inquiry SET inqOk=1 WHERE inqNum=#{inqNum}
+	</update>
+	
+	<!-- 답변 내용 저장하기 -->
+	<update id="updateInq" parameterType="InquiryDTO">
+		UPDATE inquiry SET inqContent=#{inqContent} WHERE inqNum=#{inqNum}
+	</update>
+	
+	<!-- 문의 수정 -->
+	<update id="updateContent" parameterType="InquiryDTO">
+		UPDATE inquiry SET inqName=#{inqName},userEmail=#{userEmail},inqPhone=#{inqPhone},inqSubject=#{inqSubject},inqContent=#{inqContent},filename=#{filename},filesize=#{filesize} WHERE inqNum=#{inqNum}
+	</update>
+	
+	<!-- 문의 삭제 -->
+	<delete id="deleteInq" parameterType="int">
+		DELETE FROM inquiry WHERE inqNum=#{inqNum}
+	</delete>
+	
+	<!-- ========================================================================= -->
+	<!-- FAQ -->
+	<insert id="insertFAQ" parameterType="FAQDTO">
+		INSERT INTO FAQ VALUES(faqNum.nextval,#{faqCate},#{faqSubject},#{faqContent})
+	</insert>
+	
+	<select id="FAQList" parameterType="java.util.Map" resultType="FAQDTO">
+		<include refid="pagingHeader"></include>
+		SELECT * FROM FAQ
+		<include refid="FAQSelect"></include>
+		ORDER BY faqNum desc
+		<include refid="pagingFooter"></include>
+	</select>
+	
+	<select id="FAQCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT COUNT(*) FROM FAQ
+		<include refid="FAQSelect"></include>
+	</select>
+	
+	<select id="inquiryFAQList" parameterType="java.util.Map" resultType="FAQDTO">
+		<include refid="pagingHeader"></include>
+		SELECT * FROM FAQ
+		<include refid="FAQSelect"></include>
+		ORDER BY faqNum desc
+		<include refid="pagingFooter"></include>
+	</select>
+	
+	<select id="inquiryFAQCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT COUNT(*) FROM FAQ
+		<include refid="FAQSelect"></include>
+	</select>
+	
+	<select id="getFaq" parameterType="FAQDTO">
+		SELECT * FROM FAQ WHERE faqNum=#{faqNum}
+	</select>
+	
+	<update id="updateFAQ" parameterType="FAQDTO">
+		UPDATE FAQ SET faqSubject=#{faqSubject},faqContent=#{faqContent} WHERE faqNum=#{faqNum}
+	</update>
+	<!-- ========================================================================= -->
+	
+	<!-- 개인 문의내역 검색 sql -->
+	<sql id="search4">
+		<choose>
+			<!-- 검색옵션이 전체일 경우 -->
+			<when test="searchOption == 'all'">
+				WHERE userEmail=#{userEmail}
+				AND (inqName like '%'||#{keyword}||'%'
+				OR inqSubject like '%'||#{keyword}||'%'
+				OR inqContent like '%'||#{keyword}||'%')
+			</when>
+			<!-- 전체 검색이 아닐 경우 -->
+			<otherwise>
+				WHERE userEmail=#{userEmail}
+				AND ${searchOption} like '%'||#{keyword}||'%'
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<!-- 관리자 전체 문의내역 검색 sql -->
+	<sql id="search5">
+		<choose>
+<when test="searchOption == 'all'">
+<if test="inqOk != 2">
+inqOk = #{inqOk} and
+</if>
+(inqName like '%'||#{keyword}||'%' or
+inqSubject like '%'||#{keyword}||'%' or
+inqContent like '%'||#{keyword}||'%')
+</when>
+<otherwise>
+<if test="inqOk != 2">
+inqOk = #{inqOk} and
+</if>
+${searchOption} like '%'||#{keyword}||'%'
+</otherwise>
+</choose>
+		
+	</sql>
+	
+	<!-- FAQ 검색 -->
+	<sql id="FAQSelect">
+		<choose>
+			<when test="searchOption == 'all'">
+				WHERE faqContent like '%'||#{keyword}||'%' 
+				OR faqSubject like '%'||#{keyword}||'%'
+			</when>
+			<otherwise>
+				WHERE ${searchOption} like '%'||#{keyword}||'%'
+			</otherwise>
+		</choose>
+	</sql>
+
+</mapper>

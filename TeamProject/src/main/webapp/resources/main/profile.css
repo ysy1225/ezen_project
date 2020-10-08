@@ -1,0 +1,119 @@
+@CHARSET "UTF-8";
+
+@font-face {
+  font-family: 'S-CoreDream-5Medium';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-5Medium.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.profile {
+  width: 150px;
+  height: 150px; 
+  border-radius: 30%;
+  overflow: hidden;
+  display: block;
+  margin: 0 auto;
+}
+
+.profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#nick {
+  color: #ffffff;
+  border-radius: 6px;
+  padding: 2px 8px 3px 8px;
+  white-space: nowrap;
+  transition: 0.3s;
+  font-size: 11px;
+  border: 2px solid #006bff;
+  background-color: #006bff;
+  display: inline-block;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.info h5 {
+  font-family: 'S-CoreDream-5Medium';
+}
+
+.info p {
+  text-align:center;
+  height:40px;
+  word-break : nowrap;
+  display: inline-block;
+  text-overflow: clip;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 14px; 
+}
+
+.info2 {
+  display: grid;
+  grid-auto-flow: column;
+  width: 70%;
+}
+
+.info2 {
+  display: grid;
+  width: 100%;
+}
+
+.wrap {
+  width: 500px;
+  margin-bottom: 30px;
+}
+
+.wrap h6 {
+  width: 100%;
+  resize: none;
+  overflow-y: hidden; /* prevents scroll bar flash */
+  padding: 1.1em; /* prevents text jump on Enter keypress */
+  padding-bottom: 0.2em;
+  line-height: 1.6;
+}
+
+.down {
+  margin-bottom: 30px;
+}
+
+.tutorButton a {
+  color: #006bff;
+  border-radius: 6px;
+  padding: 5px 20px 6px 20px;
+  white-space: nowrap;
+  transition: 0.3s;
+  font-size: 15px;
+  border: 2px solid #006bff;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.tutorButton a:hover {
+  background: #006bff;
+  color: #fff;
+}
+
+.rejectTextbox {
+  margin-bottom: 30px;
+}
+
+.btntn {
+  color: #006bff;
+  border-radius: 6px;
+  padding: 6px 18px 7px 18px;
+  white-space: nowrap;
+  transition: 0.3s;
+  font-size: 12px;
+  border: 2px solid #006bff;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.btntn:hover {
+  background: #006bff;
+  color: #fff;
+}

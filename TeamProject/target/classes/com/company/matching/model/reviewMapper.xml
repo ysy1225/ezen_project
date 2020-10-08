@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.matching.model">
+
+	<insert id="revInput" parameterType="ReviewDTO"> 
+		INSERT INTO review VALUES(revNum.nextval,#{userNum},#{lectureNum},#{star},#{revContent},sysdate)
+	</insert>
+	
+	<select id="reviewList" parameterType="java.util.Map" resultType="ReviewUser">
+		<!-- select * from (select rownum rn,A.*from(select * from review where lectureNum=#{lectureNum} order by revNum desc)A) where rn between #{start} and #{end} -->
+		SELECT * FROM (SELECT ROWNUM rn,A.*FROM(SELECT (SELECT userName FROM users WHERE users.usernum=review.usernum)AS userName,review.* FROM review WHERE lectureNum=#{lectureNum} ORDER BY revNum desc)A) WHERE rn BETWEEN #{start} and #{end} 
+	</select>
+	
+	<select id="avgStar" resultType="double"> 
+		SELECT AVG(star) FROM review WHERE lectureNum=#{lectureNum} 
+	</select>
+
+	<select id="checkStar" resultType="int"> 
+		SELECT COUNT(*) FROM review WHERE lectureNum=#{lectureNum} 
+	</select>
+	
+	<select id="userRev" parameterType="java.util.Map" resultType="Integer"> 
+		select count(*) from review where userNum=#{userNum} and lectureNum=#{lectureNum} 
+	</select>
+
+	<select id="URP" parameterType="java.util.Map" resultType="Integer"> 
+		select count(*) from users u where userNum=(select p.userNum from pay p where u.userNum=p.userNum and lectureNum=#{lectureNum} and userNum=#{userNum}) 
+	</select>
+
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.matching.model">
+     
+    <!-- 튜터등록 -->
+	<insert id="insertTutor" parameterType="TutorDTO">
+		INSERT INTO tutor VALUES(tutor_num.nextval,#{userNum},#{tutorNickName},#{tutorMajor},#{filename_face},#{filesize_face},#{filename},#{filesize},sysdate,0,#{tutorContent})
+	</insert>
+	
+	<!-- 튜터 리스트 -->
+	<select id="tutorList" parameterType="TutorDTO" resultType="TutorDTO">
+		<include refid="pagingHeader"></include>
+		SELECT * FROM tutor 
+		<include refid="tutorSearch"></include>
+		ORDER BY tutorNum desc
+		<include refid="pagingFooter"></include>
+	</select>
+	
+	<!-- 튜터 수 카운트 -->
+	<select id="countTutorArticle" resultType="int">
+		SELECT COUNT(*) FROM tutor
+		<!-- WHERE절을 include 태그로 삽입 -->
+		<include refid="tutorSearch"></include>
+	</select>
+	
+	<!-- 튜터 정보 가져오기 -->
+	<select id="getTutor" resultType="TutorDTO">
+		SELECT * FROM tutor WHERE tutorNum=#{tutorNum} ORDER BY tutorNum desc
+	</select>
+	<select id="getTutorInfo" parameterType="int" resultType="TutorDTO">
+		SELECT * FROM tutor WHERE userNum=#{userNum}
+	</select>	
+	<select id="getTutorName" resultType="String">
+		SELECT userName FROM users WHERE userNum=(SELECT userNum FROM tutor WHERE tutorNum=#{tutorNum})
+	</select>
+	<select id="getTutorEmail" resultType="String">
+		SELECT userEmail FROM users WHERE userNum=(SELECT userNum FROM tutor WHERE tutorNum=#{tutorNum})
+	</select>
+	
+	<!-- 튜터로 전환 -->
+	<update id="userLevelUp" parameterType="TutorDTO">
+		UPDATE users SET userLevel=1 WHERE userNum=(SELECT userNum FROM tutor WHERE tutorNum=#{tutorNum})
+	</update>
+	
+	<!-- 튜터 승인 -->
+	<update id="tutorUp" parameterType="TutorDTO">
+		UPDATE tutor SET tutorLevel=1 WHERE tutorNum=#{tutorNum}
+	</update>
+	
+	<!-- 튜터 거절 메시지 -->
+	<update id="tutorNot" parameterType="java.util.Map">
+		UPDATE tutor SET tutorContent=#{tutorContent},tutorLevel=2 where tutorNum=#{tutorNum}
+	</update>
+	
+	<!-- 튜터 거절 -->
+	<update id="tutorDown" parameterType="TutorDTO">
+		UPDATE tutor SET tutorLevel=2 WHERE tutorNum=#{tutorNum}
+	</update>
+	
+	<!-- 튜터 전공 값 가져오기 -->
+	<select id="getMajor" parameterType="int" resultType="String">
+		SELECT tutorMajor FROM tutor WHERE userNum=#{userNum} AND tutorLevel=1
+	</select>
+	
+	<!-- 튜터 전공 값 추가하기 -->
+	<update id="updateTmajor" parameterType="java.util.Map">
+		UPDATE tutor SET tutorMajor=#{tutorMajor} WHERE tutorNum=#{tutorNum}
+	</update>
+	
+	<select id="tutorList2" parameterType="Integer" resultType="TutorDTO">
+		select * from tutor where userNum=#{userNum} order by tutorNum desc
+	</select>
+	
+	<select id="LevelCheck" resultType="Integer">
+		select tutorNum from tutor where tutorlevel=1
+	</select>
+	
+	<delete id="deleteTutor" parameterType="TutorDTO">
+		delete from tutor where tutorNum=#{tutorNum}
+	</delete>
+	
+	<!-- 튜터 검색 sql -->
+	<sql id="tutorSearch">
+		<choose>
+			<!-- 검색옵션이 전체일 경우 -->
+			<when test="searchOption == 'all'">
+				WHERE tutorNum like '%'||#{keyword}||'%'
+			</when>
+			<!-- 전체 검색이 아닐 경우 -->
+			<otherwise>
+				WHERE ${searchOption} like '%'||#{keyword}||'%'
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<!-- <select id="getTutorlevel" parameterType="int">
+		select tutorLevel from tutor where userNum=#{userNum}
+	</select> -->
+</mapper>

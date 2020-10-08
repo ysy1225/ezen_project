@@ -1,0 +1,101 @@
+@CHARSET "UTF-8";
+
+@font-face {
+  font-family: 'S-CoreDream-6Bold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+#row {
+  justify-content: space-around;
+}
+
+.card {
+  width: 330px;
+  height: 430px;
+  float: left;
+  border-radius: 8px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  position: relative;
+  top: 0;
+  text-align: center;
+  transition: all 0.25s;
+  margin-bottom: 45px;
+}
+
+.card:hover {
+  top: -15px;
+  box-shadow: 0 12px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card #sumimg {
+  width: 330px;
+}
+
+.post-entry-1-contents {
+  padding: 20px 10px 0 10px;
+}
+
+.post-entry-1-contents h4 {
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 22px;
+}
+
+.post-entry-1-contents h4 a {
+  color: black;
+}
+
+.post-entry-1-contents p {
+  margin-top: 15px;
+}
+
+.post-entry-1-contents .price {
+  margin-top: 10px;
+}
+
+.post-entry-1-contents span {
+  color: #006bff;
+  border-radius: 6px;
+  padding: 1px 7px 2px 7px;
+  white-space: nowrap;
+  transition: 0.3s;
+  font-size: 13px;
+  border: 2px solid #006bff;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.post-entry-1-contents p font {
+  font-family: 'S-CoreDream-6Bold';
+  font-size: 14px;
+  color: #8a8a8a;
+}
+
+.profilename font {
+  font-family: 'S-CoreDream-6Bold';
+  font-size: 14px;
+  color: #8a8a8a;
+}
+
+#star {
+  font-family: 'S-CoreDream-6Bold';
+  font-size: 14px;
+  color: #8a8a8a;
+}
+
+#locfont {
+  font-family: 'S-CoreDream-6Bold';
+  font-size: 14px;
+  color: #8a8a8a;
+}
+
+#starspan {
+  color: orange;
+}
+
+#divblock {
+  margin: 90px 0;
+}

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.matching.model">
+
+	<!-- 전체 회원  리스트 -->
+	<select id="memberList" parameterType="UsersDTO" resultType="UsersDTO">
+		<include refid="pagingHeader"></include>
+		SELECT * FROM users 
+		<include refid="search"></include>
+		ORDER BY userNum desc, userRegdate desc
+		<include refid="pagingFooter"></include>
+	</select>
+	
+	<!-- 전체 회원 레코드 수 -->
+	<select id="countArticle" resultType="int">
+		SELECT COUNT(*) FROM users
+		<!-- WHERE절을 include 태그로 삽입 -->
+		<include refid="search"></include>
+	</select>
+	
+	<!-- 정지 회원 전체 리스트 -->
+	<select id="blockMemberList" parameterType="UsersDTO" resultType="UsersDTO">
+		<include refid="pagingHeader"></include>
+		SELECT * FROM users 
+		<include refid="search2"></include>
+		ORDER BY userNum desc, userRegdate desc
+		<include refid="pagingFooter"></include>
+	</select>
+	
+	<!-- 정지 회원 레코드 수 -->
+	<select id="countBlockArticle" resultType="int">
+		SELECT COUNT(*) FROM users
+		<!-- WHERE절을 include 태그로 삽입 -->
+		<include refid="search2"></include>
+	</select>
+	
+	<!-- 전체 회원 검색 sql -->
+	<sql id="search">
+		<choose>
+			<!-- 검색옵션이 전체일 경우 -->
+			<when test="searchOption == 'all'">
+				WHERE warningLevel=0  
+				AND (userName like '%'||#{keyword}||'%'
+				OR userEmail like '%'||#{keyword}||'%'
+				OR userPhone like '%'||#{keyword}||'%')
+			</when>
+			<!-- 전체 검색이 아닐 경우 -->
+			<otherwise>
+				WHERE warningLevel=0  
+				AND ${searchOption} like '%'||#{keyword}||'%'
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<!-- 정지 회원 검색 sql -->
+	<sql id="search2">
+		<choose>
+			<!-- 검색옵션이 전체일 경우 -->
+			<when test="searchOption == 'all'">
+				WHERE warningLevel=1  
+				AND (userName like '%'||#{keyword}||'%'
+				OR userEmail like '%'||#{keyword}||'%'
+				OR userPhone like '%'||#{keyword}||'%')
+			</when>
+			<!-- 전체 검색이 아닐 경우 -->
+			<otherwise>
+				WHERE warningLevel=1  
+				AND ${searchOption} like '%'||#{keyword}||'%'
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<!-- 페이징 sql -->
+	<sql id="pagingHeader">
+		SELECT * FROM (
+			SELECT ROWNUM AS rn, A.* FROM (
+	</sql>
+	<sql id="pagingFooter">
+			) A
+		) WHERE rn BETWEEN #{start} AND #{end}
+	</sql>
+	
+	<!-- 관리자 회원 정지 warningLevel +1 올리기 -->
+	<update id="adminBlock" parameterType="int">
+		UPDATE users SET warningLevel=1 WHERE userNum=#{userNum}
+	</update>
+	
+	<!-- 관리자 회원 삭제 -->
+	<delete id="adminDelete" parameterType="int">
+		DELETE FROM users WHERE userNum=#{userNum}
+	</delete>
+	
+	<!-- 관리자 회원 정지 warningLevel -1 내리지 -->
+	<update id="adminAllow" parameterType="int">
+		UPDATE users SET warningLevel=0 WHERE userNum=#{userNum}
+	</update>
+
+</mapper>

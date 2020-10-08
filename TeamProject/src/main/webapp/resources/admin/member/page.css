@@ -1,0 +1,21 @@
+@CHARSET "UTF-8";
+
+.hoverPagination {
+	display: table;
+	margin: 0 auto;
+}
+
+.hoverPagination a, span {
+	color: black;
+	float: left;
+	padding: 8px 16px;
+	text-decoration: none;
+}
+
+.hoverPagination a:hover {
+	background-color: #ddd;
+}
+
+#roundBorder a {
+    border-radius:5px;
+}

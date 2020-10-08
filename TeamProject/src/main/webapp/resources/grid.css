@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+
+#메뉴폼 {
+  width: 100%;
+  text-align: center;
+}
+
+#메뉴 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+#요약 {
+  display: grid;
+  grid-auto-flow: column;
+}
+
+#튜터 {
+  padding: 30px 0 0 0;
+}
+
+.pay {
+  margin: 46px 0 0 30px;
+  background-color: #f6f6f6;
+  max-height: 100vh;
+}
+
+.payForm {
+  padding: 20px 20px;
+}

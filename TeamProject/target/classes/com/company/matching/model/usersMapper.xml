@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.matching.model">
+
+	<!-- 로그인 -->
+	<select id="checkLogin" resultType="String">
+		SELECT userPw1 FROM users WHERE userEmail=#{userEmail}
+	</select>
+	
+	<select id="checkEmail" resultType="int">
+		SELECT COUNT(*) FROM users WHERE userEmail=#{userEmail}
+	</select>
+	
+	<select id="idcheck" resultType="int">
+		SELECT COUNT(*) FROM users WHERE userEmail=#{userEmail}
+	</select>
+	
+	<select id="userLevel" parameterType="java.util.Map" resultType="int">
+		SELECT userLevel FROM users WHERE userNum=(SELECT userNum FROM users WHERE userEmail=#{userEmail} AND userPw1=#{userPw1})
+	</select>
+	
+	<select id="getName" parameterType="java.util.Map" resultType="String">
+		SELECT userName FROM users WHERE userEmail=#{userEmail} AND userPw1=#{userPw1}
+	</select>
+	
+	<!-- 로그인 회원 정보 가져오기 -->
+	<select id="viewMember" resultType="UsersDTO">
+		SELECT userName, userEmail, userPhone FROM users WHERE userEmail=#{userEmail} AND userPw1=#{userPw1}
+	</select>
+	
+	<select id="blockCheck" parameterType="String" resultType="int">
+		SELECT warningLevel FROM users WHERE userEmail=#{userEmail}
+	</select>
+	
+	<!-- ID,PW 찾기 -->
+	<select id="searchId" parameterType="java.util.Map" resultType="String">
+		SELECT userEmail FROM users WHERE userName=#{userName} AND userPhone=#{userPhone}
+	</select>
+	
+	<select id="searchNum" parameterType="java.util.Map" resultType="int">
+		SELECT userNum FROM users WHERE userName=#{userName} AND userEmail=#{userEmail} AND userPhone=#{userPhone}
+	</select>
+	
+	<!-- pw재설정 -->
+	<update id="pwReset" parameterType="java.util.Map">
+		UPDATE users SET userPw1=#{userPw1},userPw2=#{userPw2} WHERE userNum=#{userNum}
+	</update>
+	
+	<select id="pwSearchCheck" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(*) FROM users WHERE userName=#{userName} AND userEmail=#{userEmail} AND userPhone=#{userPhone}
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="insertUsers" parameterType="UsersDTO">
+		INSERT INTO users VALUES(users_seq.nextval,#{userName},#{userEmail},#{userPhone},#{userPw1},#{userPw2},sysdate,0,0)
+	</insert>
+	
+	<select id="getUserNum" resultType="Integer">
+		select userNum from users where userEmail=#{userEmail}
+	</select>
+	
+	<!-- 마이페이지 비밀번호 입력 체크 -->
+	<select id="myPageCheck" resultType="String">
+		SELECT userPw1 FROM users WHERE userEmail=#{userEmail}
+	</select>
+	
+	<!-- 마이페이지 정보 가져오기 -->
+	<select id="getUserPage" resultType="UsersDTO">
+		SELECT * FROM users WHERE userEmail=#{userEmail}
+	</select>
+	
+	<!-- 회원탈퇴 -->
+	<delete id="deleteInfo" parameterType="int">
+		DELETE FROM users WHERE userEmail=#{userEmail}
+	</delete>
+	
+	<select id="getPw1" parameterType="String" resultType="String">
+		SELECT userPw1 FROM users WHERE userEmail=#{userEmail}
+	</select>
+	
+	<select id="myPageTutor" resultType="TutorDTO">
+		SELECT * FROM tutor WHERE userNum=#{userNum} AND tutorLevel=1
+	</select>
+	
+	<!-- 마이페이지 결제내역 -->
+	<select id="myPageLecture" parameterType="int" resultType="PayLectureDTO">
+		SELECT pay.payNum, pay.payPrice, pay.time, pay.payDate, lecture.* 
+		FROM pay left outer join lecture on pay.lectureNum = lecture.lectureNum 
+		WHERE pay.userNum=#{userNum} order by payNum desc
+	</select>
+	
+	<!-- 마이페이지 폰 번호 수정 -->
+	<update id="updatePhone" parameterType="UsersDTO">
+		UPDATE users SET userPhone=#{userPhone} WHERE userNum=#{userNum}
+	</update>
+
+</mapper>

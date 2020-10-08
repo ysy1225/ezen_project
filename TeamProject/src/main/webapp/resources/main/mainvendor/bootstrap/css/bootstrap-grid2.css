@@ -1,0 +1,21 @@
+/*!
+ * Bootstrap Grid v4.5.0 (https://getbootstrap.com/)
+ * Copyright 2011-2020 The Bootstrap Authors
+ * Copyright 2011-2020 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+
+@media (min-width: 992px) {  
+  .category {
+    -ms-flex: 0 0 30%;
+    flex: 0 0 12%;
+    max-width: 30%;
+  }
+}
+
+.no-gutters {
+  padding-top: 10px;
+  margin-right: 0;
+  margin-left: 0;
+}
+  /*# sourceMappingURL=bootstrap-grid.css.map */

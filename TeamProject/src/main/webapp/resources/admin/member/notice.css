@@ -1,0 +1,87 @@
+@CHARSET "UTF-8";
+
+@font-face {
+  font-family: 'S-CoreDream-9Black';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-9Black.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'S-CoreDream-8Heavy';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-8Heavy.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.comment-form h4 {
+  font-family: 'S-CoreDream-8Heavy';
+  font-size: 25px;
+  line-height: 22px;
+}
+
+.row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+.col-12 {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 100%;
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.subjectBox {
+  width: 600px;
+  border: 1px solid #d4d4d4;
+  border-radius: 5px;
+  height: 48px;
+  padding: 0 18px 0 18px;
+  font-size: 13px;
+  background: transparent;
+}
+
+.group {
+  margin-bottom: 40px;
+}
+
+.major a {
+  color: #006bff;
+  border-radius: 6px;
+  padding: 3px 13px 4px 13px;
+  white-space: nowrap;
+  transition: 0.3s;
+  font-size: 12px;
+  border: 2px solid #006bff;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.major a:hover {
+  background: #006bff;
+  color: #fff;
+}
+
+.phonebutton button {
+  color: #006bff;
+  border-radius: 6px;
+  padding: 3px 13px 4px 13px;
+  white-space: nowrap;
+  transition: 0.3s;
+  font-size: 12px;
+  border: 2px solid #006bff;
+  display: inline-block;
+  font-weight: 600;
+  margin-left: 30px;
+}
+
+.phonebutton button:hover {
+  background: #006bff;
+  color: #fff;
+}
