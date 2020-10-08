@@ -94,7 +94,7 @@
 	                <option>선택하세요.</option>
 	              </select>
 	            </div>
-	          </div>//
+	          </div>
 	        </div>
 	        <div class="group">
 	          <div>
