@@ -86,6 +86,26 @@
                      	});
                  }
                  
+                 function checkPhone() {
+                	 //휴대폰 번호 검사 정규식
+                	 var getPhone = /(01[016789])([0-9]{4})([0-9]{4})$/;
+                	 
+                	 var userPhone = $('#phone').val();
+                	 var phoneLen = userPhone.length;
+                	 
+                	 if (phoneLen < 1) {
+                		 alert("전화번호를 입력해 주세요.");
+                		 return false;
+                	 } else if (!getPhone.test($('#phone').val())) {
+                		 alert("올바른 전화번호가 아닙니다.");
+                		 return false;
+                	 } else {
+                		 var phone = $('#phone').val();
+                		 var url = "sendSMSForm.do?userPhone=" + phone;
+                		 window.open(url, "", "width=500, height=300, left=600, top=400");
+                	 }
+                 }
+                 
                //회원가입 버튼을 눌렀을 때
              	$('#submit').click(function(event) {
              		//** 이름 체크 **//
