@@ -340,5 +340,52 @@ public class UsersController {
 		req.setAttribute("url", url);
 		return "message";
 	}
+	
+	//핸드폰 번호 인증 폼
+	@RequestMapping(value = "/sendSMSForm.do")
+	public String sendSMSForm(HttpServletRequest req) {
+		String userPhone = req.getParameter("userPhone");
+		System.out.println(userPhone);
+		req.setAttribute("phonenum", userPhone);
+		return "join/phoneCheck";
+	}
+	
+	//핸드폰 번호 인증
+	@RequestMapping(value = "/sendSMS.do")
+	public @ResponseBody String sendSMS(HttpServletRequest req) {
+		String userPhone = req.getParameter("userPhone");
+		Random rand = new Random();
+		String numStr = "";
+		for (int i = 0; i < 4; i++) {
+			String ran = Integer.toString(rand.nextInt(10));
+			numStr += ran;
+		}
+		System.out.println("수신자 번호: " + userPhone);
+		System.out.println("인증 번호: " + numStr);
+		req.setAttribute("phonenum", userPhone);
+		certifiedPhoneNumber(userPhone, numStr);
+		return numStr;
+	}
+	
+	public void certifiedPhoneNumber(String userPhone, String cerNum) {
+		String api_key = "NCSXYB2J8FBWNK6E";
+		String api_secret = "AOMCCZPIZH0Q2KWYYBANN2YZN6QVKCOG";
+		Message coolsms = new Message(api_key, api_secret);
+		
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("to", userPhone);
+		params.put("from", "userPhone"); //""큰따옴표 빼고 userPhone만 입력시 실제로 문자 날라감, 현재는 콘솔에서 인증번호 확인 후 실행
+		params.put("type", "SMS");
+		params.put("text", "이젠매칭해 휴대폰인증 테스트 메세지 : 인증번호는" + "["+cerNum+"]" + "입니다.");
+		params.put("app_version", "test app 1.2");
+		
+		try {
+			JSONObject obj = (JSONObject) coolsms.send(params);
+			System.out.println(obj.toString());
+		} catch (CoolsmsException e) {
+			System.out.println(e.getMessage());
+			System.out.println(e.getCode());
+		}
+	}
 
 }
