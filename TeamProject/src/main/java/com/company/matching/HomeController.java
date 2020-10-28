@@ -83,6 +83,8 @@ public class HomeController {
 	//회원가입 폼
 	@RequestMapping(value = "/joinForm.do")
 	public String joinForm() {
+		String userPhone = req.getParameter("userPhone");
+		req.setAttribute("phonenum", userPhone);
 		return "join/joinForm";
 	}
 	
