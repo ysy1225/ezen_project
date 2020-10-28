@@ -34,7 +34,8 @@
                   </div>
                   <%--휴대폰번호 --%>
                   <div class="form-group">
-                    <input type="text" class="form-input" name="userPhone" id="phone" placeholder="Your Phone(-를 제외한 휴대폰 번호를 입력해주세요)"/>
+                    <input type="text" class="form-input" name="userPhone" id="phone" value="${phonenum}" placeholder="Your Phone(-를 제외한 휴대폰 번호를 입력해주세요)" style="width: 80%;"/>
+                    <input type="button" id="idChk" onclick="checkPhone();" value="번호인증" style="width: 20%; float: right; height: 60px;">
                     <span class="error" id="errMsg_03"></span>
                   </div>
                   <%--비밀번호 --%>
